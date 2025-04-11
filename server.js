@@ -39,8 +39,12 @@ app.get('/api/distritos/id/:id', async (req, res) => {
 // Endpoint para mostrar um distrito específico por nome
 app.get('/api/distritos/nome/:nome', async (req, res) => {
     try{
-        const distrit = await distrito.findOne({ where: { nome: req.params.nome } });
-        if(distrit){
+        const distrit = await distrito.findOne({
+            where: sequelize.where(
+                sequelize.fn('LOWER', sequelize.col('nome')),
+                req.params.nome.toLowerCase()
+            )
+        });        if(distrit){
             res.json(distrit);
         }else{
             res.status(404).send({message:'Distrito não encontrado'});

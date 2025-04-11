@@ -23,9 +23,23 @@ app.get('/api/distritos', async(req, res)=> {
 });
 
 // Endpoint para mostrar um distrito específico
-app.get('/api/distritos/:id', async (req, res) => {
+app.get('/api/distritos/id/:id', async (req, res) => {
     try{
         const distrit = await distrito.findByPk(req.params.id);
+        if(distrit){
+            res.json(distrit);
+        }else{
+            res.status(404).send({message:'Distrito não encontrado'});
+        }
+    } catch(error){
+        res.status(500).send({message:'Erro ao buscar distrito'});
+    }
+});
+
+// Endpoint para mostrar um distrito específico por nome
+app.get('/api/distritos/nome/:nome', async (req, res) => {
+    try{
+        const distrit = await distrito.findOne({ where: { nome: req.params.nome } });
         if(distrit){
             res.json(distrit);
         }else{
